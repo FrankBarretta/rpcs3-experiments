@@ -347,6 +347,15 @@ add_subdirectory(rtmidi EXCLUDE_FROM_ALL)
 # OPENCV
 add_subdirectory(opencv EXCLUDE_FROM_ALL)
 
+# DirectX 9 (Windows only, for RTX Remix compatibility)
+set(D3D9_TARGET 3rdparty_dummy_lib)
+if(WIN32 AND USE_D3D9)
+	add_library(3rdparty_d3d9 INTERFACE)
+	target_link_libraries(3rdparty_d3d9 INTERFACE d3d9 d3dcompiler dxguid)
+	target_compile_definitions(3rdparty_d3d9 INTERFACE -DHAVE_D3D9)
+	set(D3D9_TARGET 3rdparty_d3d9)
+endif()
+
 # FUSION
 add_subdirectory(fusion EXCLUDE_FROM_ALL)
 
@@ -386,3 +395,4 @@ add_library(3rdparty::rtmidi ALIAS rtmidi)
 add_library(3rdparty::opencv ALIAS ${OPENCV_TARGET})
 add_library(3rdparty::fusion ALIAS Fusion)
 add_library(3rdparty::feralinteractive ALIAS 3rdparty_feralinteractive)
+add_library(3rdparty::d3d9 ALIAS ${D3D9_TARGET})

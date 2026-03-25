@@ -1049,6 +1049,9 @@ QString emu_settings::GetLocalizedSetting(const QString& original, emu_settings_
 		case video_renderer::null: return tr("Disable Video Output", "Video renderer");
 		case video_renderer::opengl: return tr("OpenGL", "Video renderer");
 		case video_renderer::vulkan: return tr("Vulkan", "Video renderer");
+#ifdef _WIN32
+		case video_renderer::d3d9: return tr("DirectX 9 (RTX Remix)", "Video renderer");
+#endif
 		}
 		break;
 	case emu_settings_type::ShaderMode:

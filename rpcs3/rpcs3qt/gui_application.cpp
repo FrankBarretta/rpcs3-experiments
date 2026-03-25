@@ -61,6 +61,10 @@
 #include "Emu/RSX/VK/VKGSRender.h"
 #endif
 
+#if defined(HAVE_D3D9)
+#include "Emu/RSX/DX9/DX9GSRender.h"
+#endif
+
 #ifdef _WIN32
 #include <Usbiodef.h>
 #include <Dbt.h>
@@ -681,6 +685,13 @@ void gui_application::InitializeCallbacks()
 #endif
 			break;
 		}
+#if defined(HAVE_D3D9)
+		case video_renderer::d3d9:
+		{
+			g_fxo->init<rsx::thread, named_thread<DX9GSRender>>(ar);
+			break;
+		}
+#endif
 		}
 	};
 

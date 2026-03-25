@@ -645,6 +645,23 @@ if(TARGET 3rdparty_vulkan)
     endif()
 endif()
 
+if(TARGET 3rdparty_d3d9)
+    target_sources(rpcs3_emu PRIVATE
+        RSX/DX9/DX9DMA.cpp
+        RSX/DX9/DX9Formats.cpp
+        RSX/DX9/DX9FragmentProgram.cpp
+        RSX/DX9/DX9GSRender.cpp
+        RSX/DX9/DX9Helpers.cpp
+        RSX/DX9/DX9Present.cpp
+        RSX/DX9/DX9RenderTargets.cpp
+        RSX/DX9/DX9ShaderCache.cpp
+        RSX/DX9/DX9TextureCache.cpp
+        RSX/DX9/DX9VertexProgram.cpp
+        RSX/Program/HLSL/HLSL9FragmentProgramDecompiler.cpp
+        RSX/Program/HLSL/HLSL9VertexProgramDecompiler.cpp
+    )
+endif()
+
 if(NOT WIN32)
     set(THREADS_PREFER_PTHREAD_FLAG ON)
 endif()
@@ -659,6 +676,7 @@ target_link_libraries(rpcs3_emu
         3rdparty::opengl
         3rdparty::stblib
         3rdparty::vulkan
+        3rdparty::d3d9
         3rdparty::glew
         3rdparty::libusb
         3rdparty::wolfssl

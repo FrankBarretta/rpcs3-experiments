@@ -46,6 +46,9 @@ enum class video_renderer
 	null,
 	opengl,
 	vulkan,
+#ifdef _WIN32
+	d3d9,
+#endif
 };
 
 enum class audio_renderer
