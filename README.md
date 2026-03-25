@@ -36,3 +36,77 @@ Don't forget to have your graphics driver up to date and to install the [Visual 
 ## License
 
 Most files are licensed under the terms of GNU GPL-2.0-only License; see LICENSE file for details. Some files may be licensed differently; check appropriate file headers for details.
+
+
+
+
+# BUILDING DX9 Version
+
+Ecco la guida completa per buildare RPCS3 con backend DX9 da zero:
+
+---
+
+## Build RPCS3-DX9 da zero (Windows)
+
+### Prerequisiti
+
+1. **Visual Studio 2022** con workload "Desktop development with C++"
+2. **Qt 6.10.1** — msvc2022_64
+3. **Vulkan SDK** — 1.4.328.1
+4. **Git** (con submodules già inizializzati)
+
+### Step 1 — Clona e inizializza i submodules
+
+```powershell
+git clone <repo-url> rpcs3
+cd rpcs3
+git submodule update --init --recursive
+```
+
+### Step 2 — Scarica le LLVM precompiled libs
+
+```powershell
+# Crea la directory
+New-Item -Path "build\lib_ext\Release-x64" -ItemType Directory -Force
+
+# Scarica
+Invoke-WebRequest -Uri "https://github.com/RPCS3/llvm-mirror/releases/download/custom-build-win-19.1.7/llvmlibs_mt.7z" -OutFile "build\lib_ext\llvmlibs_mt.7z" -UseBasicParsing
+
+# Estrai (richiede 7-Zip)
+& "C:\Program Files\7-Zip\7z.exe" x "build\lib_ext\llvmlibs_mt.7z" -o"build\lib_ext\Release-x64" -y
+```
+
+### Step 3 — Configura environment e builda
+
+```powershell
+$env:QTDIR = "C:\Qt\6.10.1\msvc2022_64"
+
+& "C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\MSBuild.exe" `
+    rpcs3.sln `
+    /p:Configuration=Release `
+    /p:Platform=x64 `
+    /p:VcpkgEnabled=false `
+    /m `
+    /v:minimal
+```
+
+### Step 4 — Output
+
+L'eseguibile sarà in: `bin\rpcs3.exe`
+
+---
+
+### Note importanti
+
+| Parametro | Motivo |
+|---|---|
+| `/p:VcpkgEnabled=false` | **Obbligatorio** — vcpkg system integration causa conflitti LNK2005 con protobuf |
+| `/m` | Build parallelo (usa tutti i core) |
+| `Release` | Config raccomandata. Per Debug servono anche le LLVM debug libs (non disponibili precompilate) |
+
+Se vuoi buildare da Visual Studio (GUI) invece che da riga di comando:
+1. Apri rpcs3.sln in VS2022
+2. Imposta `QTDIR` come variabile di ambiente di sistema prima di aprire VS
+3. Vai in **Tools → Options → vcpkg → Enable vcpkg → OFF**  
+4. Seleziona **Release | x64**
+5. **Build → Build Solution**
